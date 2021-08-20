@@ -3,17 +3,17 @@ function encrypt(text) {
   const numOfColumns = Math.floor(Math.sqrt(noSpaceText.length));
   const frame = [];
 
-  let tempArray = [];
-  let positionCounter = 0;
+  let rowToAdd = [];
+  let currentColumnNumber = 0;
 
   for (let i = 0; i < noSpaceText.length; i++) {
-    tempArray.push(noSpaceText[i]);
-    positionCounter++;
-    if (positionCounter === numOfColumns || i === noSpaceText.length - 1 ) {
-      //push and reset
-      frame.push(tempArray);
-      tempArray = [];
-      positionCounter = 0;
+    rowToAdd.push(noSpaceText[i]);
+    currentColumnNumber++;
+    if (currentColumnNumber === numOfColumns || i === noSpaceText.length - 1) {
+      //start a new row
+      frame.push(rowToAdd);
+      rowToAdd = [];
+      currentColumnNumber = 0;
     }
   }
   console.table(frame);
@@ -33,6 +33,7 @@ function encrypt(text) {
     }
   }
   console.log(codedText);
+  return codedText;
 }
 
 //edge cases: 0, 1, low numbers, punct,
@@ -47,10 +48,22 @@ function encrypt(text) {
 
 //ui logic
 $(document).ready(function () {
-  $("form#word-form").submit(function (event) {
+  $("form").submit(function (event) {
     event.preventDefault();
     const text = $("#input1").val();
-    const table = encrypt(text);
-    $("#display").html(table);
+    
+    const encryptedMessage = encrypt(text);
+    $("#encrypted").text(encryptedMessage);
+
+    // table.forEach((row, i) => {
+    //   $("#table-body").append($(`<tr id='${row}-${i}'></tr>`));
+    //   row.forEach((item) => {
+    //     console.log(item);
+    //     $(`tr#${row}-${i}`).append(
+    //         $("<td>").text(item)
+    //       );
+        
+    //   });
+    // });
   });
 });
