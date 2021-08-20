@@ -1,7 +1,7 @@
-function encrypt(text) {
+function populateTable(text) {
   const noSpaceText = text.replace(/[\W0-9_]/gi, "");
   const numOfColumns = Math.floor(Math.sqrt(noSpaceText.length));
-  const frame = [];
+  const frame = []; //populateTable();
 
   let rowToAdd = [];
   let currentColumnNumber = 0;
@@ -16,6 +16,13 @@ function encrypt(text) {
       currentColumnNumber = 0;
     }
   }
+
+  return frame;
+}
+
+
+function encrypt(text) {
+  const frame = populateTable(text);
   console.table(frame);
   let codedText = "";
   fiveCounter = 0;
@@ -51,19 +58,25 @@ $(document).ready(function () {
   $("form").submit(function (event) {
     event.preventDefault();
     const text = $("#input1").val();
-    
+    const table = populateTable(text);
     const encryptedMessage = encrypt(text);
+    
+    $('#title').attr('colspan', table[0].length);
+
+    $("#table-body").empty();
+    $('#display').hide();
+
+    table.forEach((row, i) => {
+      $("#table-body").append($(`<tr id='tr-${i}'></tr>`));
+      row.forEach((item) => {
+        $(`tr#tr-${i}`).append(
+            $("<td>").text(item)
+          );
+      });
+    });
+
     $("#encrypted").text(encryptedMessage);
 
-    // table.forEach((row, i) => {
-    //   $("#table-body").append($(`<tr id='${row}-${i}'></tr>`));
-    //   row.forEach((item) => {
-    //     console.log(item);
-    //     $(`tr#${row}-${i}`).append(
-    //         $("<td>").text(item)
-    //       );
-        
-    //   });
-    // });
+    $('#display').slideDown();
   });
 });
